@@ -33,6 +33,9 @@ The request body to the above api must of the following types , respectively
     "ExpenseID":""
   }
 
+  Also the Sensitive information such as connection strings are directly hard coded instead of using envoirment variables / Key vaults 
+  
+
 /AddExpense --
   {
   "ExpenseName" : ""
