@@ -18,7 +18,7 @@ func DoSignUp(User Helper.User) (error, bool) {
 		return err, false
 	}
 
-	if IsValid == true {
+	if IsValid != true {
 		query := Helper.SignUpQueryCreator(User)
 
 		IsSignUpUser, err := Utility.DatabaseInstace.Query(query)
@@ -51,7 +51,7 @@ func IsValidCredentials(Credentials Helper.Credentials) (bool, error) {
 		return false, err
 	}
 
-	if IsValid == true {
+	if IsValid != true {
 		query := Helper.CredentialsQueryCreator(Credentials)
 
 		IsLoginUser, err := Utility.DatabaseInstace.Query(query)

@@ -12,7 +12,7 @@ func IsUserExistsQuery(SignUpUser User, CurrCredentials Credentials, IsSignUp bo
 }
 
 func SignUpQueryCreator(SignUpUser User) string {
-	query := "INSERT INTO SEC_LOGIN (UserName, FirstName, LastName, Password) VALUES  ('" + SignUpUser.UserName + "'+'" + SignUpUser.FirstName + "'+'" + SignUpUser.LastName + "'+'" + SignUpUser.Password + "')"
+	query := "INSERT INTO SEC_LOGIN (UserName, FirstName, LastName, Password) VALUES  ('" + SignUpUser.UserName + "','" + SignUpUser.FirstName + "','" + SignUpUser.LastName + "','" + SignUpUser.Password + "')"
 	return query
 }
 

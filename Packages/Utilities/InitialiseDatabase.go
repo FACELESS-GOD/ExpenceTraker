@@ -1,14 +1,15 @@
 package Utility
 
 import (
-	"ExpenceTraker/Helper"
 	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var DatabaseInstace *sql.DB
 
 func InitialiseDatabaseConnection() {
-	DB, err := sql.Open(Helper.DatabaseType, Helper.DatabaseConnectionString)
+	DB, err := sql.Open()
 	if err != nil {
 		panic(err)
 	}

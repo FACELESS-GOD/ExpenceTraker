@@ -42,3 +42,20 @@ The request body to the above api must of the following types , respectively
   "ExpenseType" : ""
     "Date":""    
   }
+
+
+Sigin UP  :-
+
+{
+    "firstname":"",
+    "lastname":"",
+    "email":"",
+    "username":"",
+    "password":""
+}
+
+Login :-
+{
+    "username":"",
+    "password":""
+}
