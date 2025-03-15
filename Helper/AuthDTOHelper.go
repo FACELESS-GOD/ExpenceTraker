@@ -13,10 +13,3 @@ type Credentials struct {
 	Password string `json : "password"`
 }
 
-type GenericCountResponse struct {
-	Count int
-}
-
-type GenericResponse struct {
-	Message string `json : "message"`
-}

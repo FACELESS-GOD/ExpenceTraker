@@ -122,3 +122,15 @@ func ErrorResponse(writer http.ResponseWriter, Response Helper.GenericResponse, 
 	writer.Write(res)
 
 }
+
+func IsloggedIN(req *http.Request) (bool, error) {
+	tokenString := req.Header.Get("Authorization")
+	tokenString = tokenString[len("Bearer "):]
+	isValid, err := Model.VerifyToken(tokenString)
+
+	if err != nil {
+		return false, err
+	}
+	return isValid, nil
+
+}
