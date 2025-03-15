@@ -20,3 +20,8 @@ func CredentialsQueryCreator(CurrCredentials Credentials) string {
 	query := "SELECT COUNT(*) AS USER FROM SEC_LOGIN where UserName = '" + CurrCredentials.UserName + "' and Password='" + CurrCredentials.Password + "'"
 	return query
 }
+
+func AddUserQueryCreator(SignUpUser User) string {
+	query := "INSERT INTO User_Detail (Userid, FirstName, LastName, Email) VALUES  (1,'" + SignUpUser.FirstName + "','" + SignUpUser.LastName + "','" + SignUpUser.Email + "')"
+	return query
+}

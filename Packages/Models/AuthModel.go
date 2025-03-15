@@ -5,13 +5,19 @@ import (
 	Utility "ExpenceTraker/Packages/Utilities"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/redis/go-redis/v9"
 )
 
+var IsAnyError bool
+var mutex sync.Mutex
+
 func DoSignUp(User Helper.User) (error, bool) {
+	IsAnyError = false
+
 	IsValid, err := IsUserExists(User, Helper.Credentials{}, true)
 
 	if err != nil {
@@ -19,27 +25,71 @@ func DoSignUp(User Helper.User) (error, bool) {
 	}
 
 	if IsValid != true {
-		query := Helper.SignUpQueryCreator(User)
 
-		IsSignUpUser, err := Utility.DatabaseInstace.Query(query)
+		var waitGroup sync.WaitGroup
 
-		if err != nil {
-			return err, false
+		waitGroup.Add(1)
+		go AddUser(&waitGroup, User)
+
+		waitGroup.Add(1)
+		go AddCredentials(&waitGroup, User)
+
+		waitGroup.Wait()
+
+		if IsAnyError == true {
+			return nil, false
+		} else {
+			return nil, true
 		}
-		for IsSignUpUser.Next() {
-		}
-
-		errRedis := Utility.RedisInstance.Set(Utility.Ctx, User.UserName, User.Password, 0).Err()
-
-		if errRedis != nil {
-			return err, false
-		}
-
-		return nil, true
 
 	} else {
 		return nil, false
 	}
+}
+
+func AddUser(WaitGroup *sync.WaitGroup, User Helper.User) {
+	defer WaitGroup.Done()
+	query := Helper.AddUserQueryCreator(User)
+
+	IsSignUpUser, err := Utility.DatabaseInstace.Query(query)
+
+	if err != nil {
+		mutex.Lock()
+		IsAnyError = true
+		mutex.Unlock()
+		return
+	}
+
+	for IsSignUpUser.Next() {
+	}
+
+}
+
+func AddCredentials(WaitGroup *sync.WaitGroup, User Helper.User) {
+	defer WaitGroup.Done()
+
+	query := Helper.SignUpQueryCreator(User)
+
+	IsSignUpUser, err := Utility.DatabaseInstace.Query(query)
+
+	if err != nil {
+		mutex.Lock()
+		IsAnyError = true
+		mutex.Unlock()
+		return
+	}
+	for IsSignUpUser.Next() {
+	}
+
+	errRedis := Utility.RedisInstance.Set(Utility.Ctx, User.UserName, User.Password, 0).Err()
+
+	if errRedis != nil {
+		mutex.Lock()
+		IsAnyError = true
+		mutex.Unlock()
+		return
+	}
+
 }
 
 func IsValidCredentials(Credentials Helper.Credentials) (bool, error) {

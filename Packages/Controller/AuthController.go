@@ -32,20 +32,6 @@ func SignUp(writer http.ResponseWriter, Req *http.Request) {
 
 }
 
-func IsRedis(CurrCred Helper.Credentials) (bool, error) {
-	IsValid, err := Model.IsPresentInRedis(CurrCred)
-	if err != nil {
-		return false , err
-	}
-
-	if IsValid == true {
-		return true , nil
-	} else {
-		return false, nil
-	}
-
-}
-
 func Login(writer http.ResponseWriter, Req *http.Request) {
 	Response := Helper.GenericResponse{}
 
@@ -94,6 +80,20 @@ func Login(writer http.ResponseWriter, Req *http.Request) {
 		writer.Header().Set("Authorization", "Bearer "+Token)
 		validOperationResponse(writer, Response, "SignUp was successfull")
 		return
+	}
+
+}
+
+func IsRedis(CurrCred Helper.Credentials) (bool, error) {
+	IsValid, err := Model.IsPresentInRedis(CurrCred)
+	if err != nil {
+		return false, err
+	}
+
+	if IsValid == true {
+		return true, nil
+	} else {
+		return false, nil
 	}
 
 }
